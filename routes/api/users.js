@@ -13,6 +13,8 @@ const User = require('../../models/User');
 
 
 // @route POST api/users/register
+// @desc Register user
+// @access Public
 router.post('/signup', (req, res) => {
     const { errors, isValid } = validateSignInInput(req.body);
 
