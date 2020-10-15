@@ -46,3 +46,45 @@ router.post('/signup', (req, res) => {
         }
     });
 });
+
+// @route POST api/users/login
+// @descr Login user and return JWT
+// @access Public
+router.post('/login', (req, res) => {
+    const { errors, isValid } = validateLoginInput(req.body);
+
+    if (!isValid) {
+        return res.status(200).json(errors);
+    }
+
+    const email = req.body.email;
+    const password = req.body.password;
+    User.findOne({ email }).then(user => {
+        if (!user) {
+            return res.status(404).json({ emailNotFound: "Email not found" });
+        }
+
+        bcrypt.compare(password, user.password).then(isMatch => {
+            if (isMatch) {
+                const payload = {
+                    id: user.id,
+                    name: user.firstName + user.lastName
+                };
+                jwt.sign(
+                    payload,
+                    keys.secretOrKey,
+                    {
+                        expiresIn: 24822481
+                    },
+                    (err, token) => {
+                        res.json({ success: true, token: "Bearer" + token });
+                    }
+                );
+            } else {
+                return res.status(400).json({ passwordIncorrect: "Password Incorrect" });
+            }
+        });
+    });
+});
+
+module.exports = router;
