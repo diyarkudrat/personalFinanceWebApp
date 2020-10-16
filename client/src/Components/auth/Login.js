@@ -9,6 +9,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/authActions';
+import classnames from  'classnames';
 
 class Login extends Component {
     constructor() {
@@ -19,6 +25,18 @@ class Login extends Component {
             errors: {}
         };
     }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.auth.isAuthenticated) {
+            this.props.history.push('/dashboard')
+        }
+
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
+    };
 
     onChange = event => {
         this.setState({ [event.target.id]: event.target.value });
@@ -31,8 +49,8 @@ class Login extends Component {
             email: this.state.email,
             password: this.state.password
         };
-        console.log('userData', userData);
-    }
+        this.props.loginUser(userData);
+    };
 
     useStyles = makeStyles((theme) => ({
         paper: {
@@ -84,7 +102,11 @@ class Login extends Component {
                   onChange={this.onChange}
                   value={this.state.email}
                   error={errors.email}
+                  className={classnames("", {
+                      invalid: errors.email || errors.emailnotfound
+                  })}
                 />
+                <FormControlLabel label={errors.emailnotfound} />
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -97,7 +119,11 @@ class Login extends Component {
                   onChange={this.onChange}
                   value={this.state.password}
                   error={errors.password}
+                  className={classnames("", {
+                      invalid: errors.password || errors.passwordincorrect
+                  })}
                 />
+                <FormControlLabel label={errors.passwordincorrect} />
                 <Button
                   type="submit"
                   fullWidth
@@ -109,7 +135,7 @@ class Login extends Component {
                 </Button>
                 <Grid container>
                   <Grid item>
-                    <Link href="#" variant="body2">
+                    <Link href="/signup" variant="body2">
                       {"Don't have an account? Sign Up"}
                     </Link>
                   </Grid>
@@ -121,4 +147,18 @@ class Login extends Component {
     }
 }
 
-export default Login;
+Login.propTypes = {
+    loginUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+export default connect(
+    mapStateToProps,
+    { loginUser }
+)(login);

@@ -8,6 +8,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { registerUser } from '../../actions/authActions';
+import classnames from 'classnames';
 
 class Register extends Component {
     constructor() {
@@ -20,6 +26,14 @@ class Register extends Component {
             confirmPassword: '',
             errors: {}
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({
+                errors: nextProps.errors
+            });
+        }
     }
 
     onChange = event => {
@@ -36,7 +50,7 @@ class Register extends Component {
             password: this.state.password,
             confirmPassword: this.state.confirmPassword
         };
-        console.log('newUser', newUser);
+        this.props.registerUser(newUser, this.props.history);
     };
 
     useStyles = makeStyles((theme) => ({
@@ -88,7 +102,11 @@ class Register extends Component {
                                   value={this.state.firstName}
                                   onChange={this.onChange}
                                   autoFocus
+                                  className={classnames("", {
+                                      invalid: errors.firstName
+                                  })}
                                 />
+                                <FormControlLabel label={errors.firstName} />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -103,7 +121,11 @@ class Register extends Component {
                                   value={this.state.lastName}
                                   onChange={this.onChange}
                                   autoFocus
+                                  className={classnames("", {
+                                      invalid: errors.lastName
+                                  })}
                                 />
+                                <FormControlLabel label={errors.lastName} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -117,7 +139,11 @@ class Register extends Component {
                                   onChange={this.onChange}
                                   value={this.state.email}
                                   error={errors.email}
+                                  className={classnames("", {
+                                      invalid: errors.email
+                                  })}
                                 />
+                                <FormControlLabel label={errors.email} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -131,7 +157,11 @@ class Register extends Component {
                                   onChange={this.onChange}
                                   value={this.state.password}
                                   error={errors.password}
+                                  className={classnames("", {
+                                      invalid: errors.password
+                                  })}
                                 />
+                                <FormControlLabel label={errors.password} />
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -145,7 +175,11 @@ class Register extends Component {
                                   onChange={this.onChange}
                                   value={this.state.confirmPassword}
                                   error={errors.confirmPassword}
+                                  className={classnames("", {
+                                      invalid: errors.confirmPassword
+                                  })}
                                 />
+                                <FormControlLabel label={errors.confirmPassword} />
                             </Grid>
                         </Grid>
                         <Button
@@ -164,4 +198,18 @@ class Register extends Component {
     }
 }
 
-export default Register;
+Register.propTypes = {
+    registerUser: PropTypes.func.isRequired,
+    auth: PropTypes.object.isRequired,
+    errors: PropTypes.object.isRequired
+};
+
+const mapStateToProps = state => ({
+    auth: state.auth,
+    errors: state.errors
+});
+
+export default connect(
+    mapStateToProps,
+    { registerUser },
+)(withRouter(Register));
