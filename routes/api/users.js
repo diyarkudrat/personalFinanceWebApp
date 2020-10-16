@@ -17,12 +17,13 @@ const User = require('../../models/User');
 // @access Public
 router.post('/signup', (req, res) => {
     const { errors, isValid } = validateSignInInput(req.body);
-
+    console.log(req.body);
     if (!isValid) {
         return res.status(400).json(errors);
     }
 
-    User.findOne({ email: req.body.email }).then(user => {
+    const email = req.body.email
+    User.findOne({ email }).then(user => {
         if (user) {
             return res.status(400).json({ email: 'Email already exists' });
         } else {
@@ -52,7 +53,7 @@ router.post('/signup', (req, res) => {
 });
 
 // @route POST api/users/login
-// @descr Login user and return JWT
+// @desc Login user and return JWT
 // @access Public
 router.post('/login', (req, res) => {
     const { errors, isValid } = validateLoginInput(req.body);
@@ -78,7 +79,7 @@ router.post('/login', (req, res) => {
                     payload,
                     keys.secretOrKey,
                     {
-                        expiresIn: 24822481
+                        expiresIn: 31556926
                     },
                     (err, token) => {
                         res.json({ success: true, token: "Bearer" + token });
