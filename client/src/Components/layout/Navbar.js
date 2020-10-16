@@ -25,7 +25,7 @@ export default function Navbar() {
             <AppBar position="static" className={classes.appbar} color="inherit">
                 <Toolbar>
                     <Typography variant="h6" className={classes.title}>
-                        AutoBidSX
+                        PersonalFinanceApp
                     </Typography>
                     <Button color="inherit" href="/login">Log In</Button>
                 </Toolbar>
