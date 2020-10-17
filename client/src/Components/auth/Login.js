@@ -9,11 +9,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+// import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { registerUser } from '../../actions/authActions';
+import { loginUser } from '../../actions/authActions';
 import classnames from  'classnames';
 
 class Login extends Component {
@@ -25,6 +25,12 @@ class Login extends Component {
             errors: {}
         };
     }
+
+    componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
+    };
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth.isAuthenticated) {
@@ -106,7 +112,7 @@ class Login extends Component {
                       invalid: errors.email || errors.emailnotfound
                   })}
                 />
-                <FormControlLabel label={errors.emailnotfound} />
+                <span>{errors.emailnotfound}</span>
                 <TextField
                   variant="outlined"
                   margin="normal"
@@ -123,7 +129,7 @@ class Login extends Component {
                       invalid: errors.password || errors.passwordincorrect
                   })}
                 />
-                <FormControlLabel label={errors.passwordincorrect} />
+                <span>{errors.passwordincorrect}</span>
                 <Button
                   type="submit"
                   fullWidth
@@ -161,4 +167,4 @@ const mapStateToProps = state => ({
 export default connect(
     mapStateToProps,
     { loginUser }
-)(login);
+)(Login);

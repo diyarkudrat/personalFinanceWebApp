@@ -8,7 +8,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { withRouter } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -26,6 +26,12 @@ class Register extends Component {
             confirmPassword: '',
             errors: {}
         };
+    }
+
+    componentDidMount() {
+        if (this.props.auth.isAuthenticated) {
+            this.props.history.push('/dashboard');
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -106,7 +112,7 @@ class Register extends Component {
                                       invalid: errors.firstName
                                   })}
                                 />
-                                <FormControlLabel label={errors.firstName} />
+                                <span>{errors.firstName}</span>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -125,7 +131,7 @@ class Register extends Component {
                                       invalid: errors.lastName
                                   })}
                                 />
-                                <FormControlLabel label={errors.lastName} />
+                                <span>{errors.lastName}</span>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -143,7 +149,7 @@ class Register extends Component {
                                       invalid: errors.email
                                   })}
                                 />
-                                <FormControlLabel label={errors.email} />
+                                <span>{errors.email}</span>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -161,7 +167,7 @@ class Register extends Component {
                                       invalid: errors.password
                                   })}
                                 />
-                                <FormControlLabel label={errors.password} />
+                                <span>{errors.password}</span>
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField
@@ -179,7 +185,7 @@ class Register extends Component {
                                       invalid: errors.confirmPassword
                                   })}
                                 />
-                                <FormControlLabel label={errors.confirmPassword} />
+                                <span>{errors.confirmPassword}</span>
                             </Grid>
                         </Grid>
                         <Button
