@@ -57,7 +57,7 @@ router.post('/accounts/add', passport.authenticate('jwt', { session: false }), (
             })
             .catch(err => console.log('Plaid Error', err))
     }
-})
+});
 
 // @route DELETE api/plaid/accounts/:id
 // @desc Delete account with given ID
@@ -66,6 +66,48 @@ router.delete('/accounts/:id', passport.authenticate('jwt', { session: false }),
     Account.findById(req.params.id).then(account => {
         account.remove().then(() => res.json({ success: true }));
     });
+});
+
+// @route GET api/plaid/accounts
+// @desc Retrieve all acounts that specific user linked with plaid
+// @access Private
+router.get('/accounts', passport.authenticate('jwt', { session: false }), (req, res) => {
+    Account.find({ userId: req.user.id })
+        .then(accounts => res.json(accounts))
+        .catch(err => console.log(err));
+});
+
+// @route POST api/plaid/accounts/trasactions
+// @route Retrieve transactions from the past 30 days from all linked accounts
+// @access Private
+router.posr('/accounts/transactions', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const now = moment();
+    const today = now.format("YYY-MM-DD");
+    const thirtyDaysAgo = now.subtract(30, 'days').format('YYYY-MM-DD');
+
+    let transactions = [];
+
+    const accounts = req.body;
+
+    if (accounts) {
+        accounts.forEach(function(account) {
+            ACCESS_TOKEN = account.accessToken;
+            const institutionName = account.institutionName;
+
+            client
+              .getTransactions(ACCESS_TOKEN, thirtyDaysAgo, today)
+              .then(response => {
+                  transactions.push({
+                      accountName: institutionName,
+                      transactions: response.transactions
+                  });
+                  if (transactions.length === accounts.length) {
+                      res.json(transactions);
+                  }
+              })
+              .catch(err => console.log(err));
+        });
+    }
 })
 
 
