@@ -80,7 +80,7 @@ router.get('/accounts', passport.authenticate('jwt', { session: false }), (req, 
 // @route POST api/plaid/accounts/trasactions
 // @route Retrieve transactions from the past 30 days from all linked accounts
 // @access Private
-router.posr('/accounts/transactions', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/accounts/transactions', passport.authenticate('jwt', { session: false }), (req, res) => {
     const now = moment();
     const today = now.format("YYY-MM-DD");
     const thirtyDaysAgo = now.subtract(30, 'days').format('YYYY-MM-DD');
