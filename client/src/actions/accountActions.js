@@ -5,13 +5,31 @@ import {
     GET_ACCOUNTS,
     ACCOUNTS_LOADING,
     GET_TRANSACTIONS,
-    TRANSACTIONS_LOADING
+    TRANSACTIONS_LOADING,
+    LINK_TOKEN
 } from './types';
+
+export const createLinkToken = userId => dispatch => {
+  axios
+    .post("http://localhost:5000/api/plaid/create-link-token", userId)
+    .then(res =>
+      dispatch({
+        type: LINK_TOKEN,
+        payload: res.data.link_token
+      })
+    )
+    .catch(err =>
+      dispatch({
+        type: LINK_TOKEN,
+        payload: null
+      })
+    );
+};
 
 export const addAccount = plaidData => dispatch => {
     const accounts = plaidData.accounts;
     axios
-      .post("/api/plaid/accounts/add", plaidData)
+      .post("http://localhost:5000/api/plaid/accounts/add", plaidData)
       .then(res =>
         dispatch({
             type: ADD_ACCOUNT,
@@ -20,7 +38,7 @@ export const addAccount = plaidData => dispatch => {
       )
       .then(data => accounts ? dispatch(getTransactions(accounts.concat(data.payload))) : null)
       .catch(err => console.log(err));
-}
+};
 
 export const deleteAccount = plaidData => dispatch => {
     if (window.confirm("Are you sure you want to remove this account?")) {
@@ -29,7 +47,7 @@ export const deleteAccount = plaidData => dispatch => {
             account => account._id !== id
         );
         axios
-          .delete(`api/plaid/accounts/${id}`)
+          .delete(`http://localhost:5000/api/plaid/accounts/${id}`)
           .then(res =>
             dispatch({
                 type: DELETE_ACCOUNT,
@@ -44,7 +62,7 @@ export const deleteAccount = plaidData => dispatch => {
 export const getAccounts = () => dispatch => {
     dispatch(setAccountsLoading());
     axios
-      .get('/api/plaid/accounts')
+      .get('http://localhost:5000/api/plaid/accounts')
       .then(res =>
         dispatch({
             type: GET_ACCOUNTS,
@@ -61,14 +79,14 @@ export const getAccounts = () => dispatch => {
 
 export const setAccountsLoading = () => {
     return {
-        types: ACCOUNTS_LOADING
+        type: ACCOUNTS_LOADING
     };
 };
 
 export const getTransactions = plaidData => dispatch => {
     dispatch(setTransactionsLoading());
     axios
-      .post('/api/plaid/accounts/transactions', plaidData)
+      .post('http://localhost:5000/api/plaid/accounts/transactions', plaidData)
       .then(res =>
         dispatch({
             type: GET_TRANSACTIONS,
@@ -85,6 +103,6 @@ export const getTransactions = plaidData => dispatch => {
 
 export const setTransactionsLoading = () => {
     return {
-        types: TRANSACTIONS_LOADING
+        type: TRANSACTIONS_LOADING
     };
 };

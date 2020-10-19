@@ -8,12 +8,19 @@ const mongoose = require('mongoose');
 const Account = require('../../models/Account');
 const User = require('../../models/User');
 
+require('dotenv').config();
+
+const PLAID_CLIENT_ID = "5f8a73037c8b68001175ecdb";
+const PLAID_SECRET = "81ec57067df5f09e25c987379ce294";
+
 const client = new plaid.Client({
-    clientID: process.env.PLAID_CLIENT_ID,
-    secret: process.env.PLAID_SECRET,
-    env: plaid.environments.sandbox,
+  clientID: PLAID_CLIENT_ID,
+  secret: PLAID_SECRET,
+  env: plaid.environments.sandbox
 });
 
+// clientID: "5f8a73037c8b68001175ecdb",
+// secret: "81ec57067df5f09e25c987379ce294",
 var PUBLIC_TOKEN = null;
 var ACCESS_TOKEN = null;
 var ITEM_ID = null;
@@ -68,10 +75,30 @@ router.delete('/accounts/:id', passport.authenticate('jwt', { session: false }),
     });
 });
 
+// @route POST api/plaid/create_link_token
+// @desc Retrieve link token to be able to use Plaid Link component
+// @access Private
+router.post('/create_link_token', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    clientUserId = req.user.id;
+
+    const linkTokenResponse = await client.createLinkToken({
+        user: {
+            client_user_id: clientUserId,
+        },
+        client_name: 'Make School',
+        products: ['transactions'],
+        country_codes: ['US'],
+        language: 'en',
+        webhook: 'http://localhost:3000',
+    });
+    const link_token = linkTokenResponse.link_token;
+    res.json({ link_token });
+});
+
 // @route GET api/plaid/accounts
 // @desc Retrieve all acounts that specific user linked with plaid
 // @access Private
-router.get('/accounts', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/accounts', passport.authenticate("jwt", { session: false }), (req, res) => {
     Account.find({ userId: req.user.id })
         .then(accounts => res.json(accounts))
         .catch(err => console.log(err));
@@ -109,6 +136,7 @@ router.post('/accounts/transactions', passport.authenticate('jwt', { session: fa
         });
     }
 })
+
 
 
 module.exports = router;

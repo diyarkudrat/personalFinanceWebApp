@@ -4,18 +4,25 @@ import {
     GET_ACCOUNTS,
     ACCOUNTS_LOADING,
     GET_TRANSACTIONS,
-    TRANSACTIONS_LOADING
+    TRANSACTIONS_LOADING,
+    LINK_TOKEN
 } from "../actions/types";
 
 const initialState = {
     accounts: [],
     transactions: [],
     accountsLoading: false,
-    transactionsLoading: false
+    transactionsLoading: false,
+    linkToken: null,
 };
 
 export default function(state = initialState, action) {
     switch (action.type) {
+        case LINK_TOKEN:
+            return {
+                ...state,
+                linkToken: action.payload
+            }
         case ACCOUNTS_LOADING:
             return {
                 ...state,
@@ -35,6 +42,12 @@ export default function(state = initialState, action) {
             return {
                 ...state,
                 transactionsLoading: true
+            };
+        case GET_ACCOUNTS:
+            return {
+                ...state,
+                accounts: action.payload,
+                accountsLoading: false
             };
         case GET_TRANSACTIONS:
             return {
