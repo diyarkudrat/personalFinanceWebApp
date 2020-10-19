@@ -4,7 +4,7 @@
     `https://personal-finance-app-dk.herokuapp.com/`
 
 ## Description
-    Banking application using the Plaid API to be able to link multiple bank accounts, view all the transactions made from those bank accounts, and search/filter through the transaction
+Banking application using the Plaid API to be able to link multiple bank accounts, view all the transactions made from those bank accounts, and search/filter through the transaction
 
 ## Tech Stack
     MERN (MongoDB, Express, React, Node)
