@@ -5,6 +5,7 @@ const passport = require('passport');
 const cors = require('cors');
 
 require('dotenv').config();
+const path = require('path');
 
 const users = require('./routes/api/users');
 const plaid = require('./routes/api/plaid');
@@ -34,7 +35,7 @@ app.use('/api/plaid', plaid);
 if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
     app.use(express.static('client/build'));
     app.get('*', (req, res) => {
-      res.sendFile(path.join('client/build/index.html'));
+      res.sendFile(path.join(__dirname + '/client/build/index.html'));
     });
 }
 
