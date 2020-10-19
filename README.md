@@ -24,13 +24,8 @@ If you would like to clone this repo:
     - ```bash
         npm install
         ```
-- Create config folder in root directory to put in your MongoDB Uri
-    - ```bash
-        mkdir config
-        ```
-    - ```bash
-        touch keys.js
-        ```
+- Edit keys.js file in config folder that's located in the root directory
+
     - Insert this code in the keys.js file
         - ```javascript
             module.exports = {
