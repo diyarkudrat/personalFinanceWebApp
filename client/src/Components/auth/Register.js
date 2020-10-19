@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { withRouter } from 'react-router-dom';
+import Link from '@material-ui/core/Link';
 
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -86,11 +85,8 @@ class Register extends Component {
         return (
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
-                <div className={classes.paper}>
-                    <Avatar className={classes.avatar}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography component="h1" variant="h5">
+                <div className={classes.paper} style={{marginTop: '20%'}}>
+                    <Typography component="h1" variant="h2" style={{ textAlign: 'center', marginBottom: '5%' }}>
                         Sign Up
                     </Typography>
                     <form className={classes.form} onSubmit={this.onSubmit} noValidate>
@@ -186,6 +182,9 @@ class Register extends Component {
                                   })}
                                 />
                                 <span>{errors.confirmPassword}</span>
+                                <Link href="/login" variant="body2">
+                                    {"Already have an account? Log In"}
+                                </Link>
                             </Grid>
                         </Grid>
                         <Button
@@ -194,6 +193,7 @@ class Register extends Component {
                             variant="contained"
                             color="primary"
                             className={classes.submit}
+                            style={{marginTop: '10%'}}
                         >
                             Sign Up
                         </Button>

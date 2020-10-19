@@ -74,8 +74,7 @@ class TransactionDetails extends Component {
 
         return (
             <>
-            <h4>Hello there, {this.props.user.name.split(" ")[0]}</h4>
-            <b>Linked Accounts</b>
+            <h3><b>Linked Accounts</b></h3>
             <ul>{accountItems}</ul>
             {this.props.linkToken ? 
                 <PlaidLink
@@ -87,7 +86,7 @@ class TransactionDetails extends Component {
                 null
             }
 
-            <h4>Transactions</h4>
+            <h2>Transactions</h2>
             
             <MaterialTable
                 icons={tableIcons}

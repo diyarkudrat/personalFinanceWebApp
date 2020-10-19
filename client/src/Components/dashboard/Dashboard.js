@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import PropTypes from 'prop-types';
 import { PlaidLink } from 'react-plaid-link';
+import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { logoutUser } from '../../actions/authActions';
 import { getAccounts, addAccount, createLinkToken } from '../../actions/accountActions';
@@ -65,21 +66,27 @@ class Dashboard extends Component {
             <div style={{ height: "75vh" }}>
                 <div className="row">
                 <div>
-                    <h4>
-                        <b>Hey there,</b> {user.name.split(" ")[0]}
-                        <p className="flow-text grey-text text-darken-1">
-                            You are logged into PersonalFinance!
-                        </p>
-                        <button onClick={this.onLogoutClick}>Logout</button>
-                    </h4>
-                    { this.state.linkToken ? 
-                        <PlaidLink
-                            token={this.state.linkToken}
-                            onSuccess={this.handleSuccess}> 
-                            Connect a bank account 
-                        </PlaidLink> : 
-                        null 
-                    }
+                    <h2 style={{marginLeft: '36%'}}><b>Hello,</b> {user.name.split(" ")[0]}!</h2>
+                    <div style={{marginLeft: '38%'}}>
+                        { this.state.linkToken ? 
+                            <PlaidLink
+                                token={this.state.linkToken}
+                                onSuccess={this.handleSuccess}> 
+                                Connect a bank account 
+                            </PlaidLink> : 
+                            null 
+                        }
+                    </div>
+                    {/* <button style={{marginLeft: '42%', marginTop: '10px'}} onClick={this.onLogoutClick}>Logout</button> */}
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      onClick={this.onLogoutClick}
+                      style={{marginLeft: '40%', marginTop: '10px'}}
+                    >
+                    Log Out
+                    </Button>
                 </div>
                 <div>
                     { this.state.transactions ? <TransactionDetails transactions={this.state.transactions} accounts={this.state.accounts} user={user} linkToken={this.props.linkToken} /> : null }
