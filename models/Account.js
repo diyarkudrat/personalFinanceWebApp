@@ -18,6 +18,10 @@ const AccountSchema = new Schema({
         type: String,
         required: true
     },
+    institutionName: {
+        type: String,
+        required: true
+    },
     accountName: {
         type: String
     },

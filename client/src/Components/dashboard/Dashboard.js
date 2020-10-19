@@ -28,7 +28,7 @@ class Dashboard extends Component {
     };
 
     handleSuccess = async (token, metadata) => {
-        const userId = '5f8a431c3b417c6351227674';
+        const userId = this.props.auth.user.id;
         const plaidData = {
             public_token: token,
             metadata: metadata
@@ -37,14 +37,16 @@ class Dashboard extends Component {
     }
 
     getLinkToken = async () => {
-        const userId = '5f8a431c3b417c6351227674';
+        const userId = this.props.auth.user.id;
         const response = await axios.post("http://localhost:5000/api/plaid/create-link-token", { userId });
         const linkToken = response.data.link_token;
         this.setState({ linkToken })
     }
 
     getAccounts = async () => {
-        const userId = '5f8a431c3b417c6351227674';
+        // const userId = '5f8a431c3b417c6351227674';
+        debugger;
+        const userId = this.props.auth.user.id;
         const response = await axios.post('http://localhost:5000/api/plaid/accounts', { userId });
         this.setState({ accounts: response.data }, () => {
             this.getTransactions(this.state.accounts);
@@ -68,6 +70,7 @@ class Dashboard extends Component {
                         <p className="flow-text grey-text text-darken-1">
                             You are logged into PersonalFinance!
                         </p>
+                        <button onClick={this.onLogoutClick}>Logout</button>
                     </h4>
                     { this.state.linkToken ? 
                         <PlaidLink
@@ -79,9 +82,8 @@ class Dashboard extends Component {
                     }
                 </div>
                 <div>
-                    { this.state.transactions ? <TransactionDetails transactions={this.state.transactions} /> : null }
+                    { this.state.transactions ? <TransactionDetails transactions={this.state.transactions} accounts={this.state.accounts} user={user} linkToken={this.props.linkToken} /> : null }
                 </div>
-                    <button onClick={this.onLogoutClick}>Logout</button>
                 </div>
             </div>
         );

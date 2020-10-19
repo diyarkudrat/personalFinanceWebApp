@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
     const classes = useStyles();
 
+    const onLogoutClick = event => {
+        event.preventDefault();
+        this.props.logoutUser();
+    };
+
     return (
         <div className={classes.root}>
             <AppBar position="static" className={classes.appbar} color="inherit">
@@ -28,6 +33,7 @@ export default function Navbar() {
                         PersonalFinanceApp
                     </Typography>
                     <Button color="inherit" href="/login">Log In</Button>
+                    <Button color="inherit" onClick={onLogoutClick}>Log Out</Button>
                 </Toolbar>
             </AppBar>
         </div>
