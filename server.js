@@ -31,6 +31,10 @@ require('./config/passport')(passport);
 app.use('/api/users', users);
 app.use('/api/plaid', plaid);
 
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+}
+
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server listening on port ${port}!`));
